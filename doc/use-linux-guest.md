@@ -11,7 +11,7 @@ Bien sur il vous faudra vagrant et virtualbox d'installés. Rendez vous ici pour
 télécharger ces deux logiciels :
 
   https://www.virtualbox.org/wiki/Downloads
-  http://downloads.vagrantup.com/
+  http://www.vagrantup.com/downloads.html
 
 Avant de commencer, il vous faut récuperer et installer la box de base:
 
