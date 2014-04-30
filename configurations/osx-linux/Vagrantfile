@@ -1,0 +1,102 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+# Configuring repositories
+CONFIG_DIR   = File.dirname(__FILE__)
+HOST, TARGET = File.basename(CONFIG_DIR).split('-')
+ROOT_DIR     = File.join(CONFIG_DIR, '..', '..')
+PROV_DIR     = File.join(ROOT_DIR, 'provisionning', TARGET)
+RECORDS_DIR  = File.join(ROOT_DIR, 'screencasts')
+SCRIPTS_DIR  = File.join(ROOT_DIR, 'scripts', TARGET)
+BINS_DIR     = File.join(ROOT_DIR, 'bin', TARGET)
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "gui-precise32"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  # config.vm.box_url = "http://domain.com/path/to/above.box"
+  #
+  # Since vagrant doesn't support this kind of URLs, you have to
+  # fetch and add this box mannually.
+  #
+  config.vm.box_url = "http://public.synbioz.com/gui-precise32.box"
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # config.vm.network :forwarded_port, guest: 80, host: 8080
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network :private_network, ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network :public_network
+
+  # If true, then any SSH connections made will enable agent forwarding.
+  # Default value: false
+  # config.ssh.forward_agent = true
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+
+  config.vm.synced_folder SCRIPTS_DIR, "/vagrant_scripts"
+  config.vm.synced_folder BINS_DIR,    "/vagrant_bin"
+  config.vm.synced_folder PROV_DIR,    "/vagrant_prov"
+  config.vm.synced_folder RECORDS_DIR, "/screencasts"
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  config.vm.provider :virtualbox do |vb|
+    # Don't boot with headless mode
+    vb.gui = true
+
+    # Use VBoxManage to customize the VM. Here we're:
+    # - Adding video ram (10 Mib to 64 Mib)
+    # - Using alsa as an audio device (this will dépend on your host config)
+    # - Sharing the clipboard between the guest and the host
+    vb.customize ["modifyvm", :id,
+                  "--vram",      "128",
+                  "--audio",     "coreaudio",
+                  "--clipboard", "bidirectional",
+                  "--memory",    "1024",
+                  "--ioapic",    "on",
+                  "--cpus",      "4",
+    ]
+  end
+
+  # Provisionners
+
+  config.vm.provision 'shell', path: File.join(PROV_DIR, '00_configuration.sh'), args: ENV['KB_CONFIG']
+  config.vm.provision 'shell', path: File.join(PROV_DIR, '01_screencasting_tools.sh')
+  config.vm.provision 'shell', path: File.join(PROV_DIR, '02_update_distro.sh')
+  config.vm.provision 'shell', path: File.join(PROV_DIR, '03_rubies.sh')
+
+  # This part is relative to the vagrant-vbguest plugin.
+  # Run « vagrant plugin install vagrant-vbguest » to install it.
+  #
+  # The plugin will try to autodetect this path.
+  # However, if we cannot or you have a special one you may pass it like:
+  # config.vbguest.iso_path = "#{ENV['HOME']}/Downloads/VBoxGuestAdditions.iso"
+  # config.vbguest.iso_path = "http://company.server/VirtualBox/%{version}/VBoxGuestAdditions.iso"
+  #
+  # Set auto_update to false, if do NOT want to check the correct additions
+  # version when booting this machine
+  config.vbguest.auto_update = true
+  #
+  # Do NOT download the iso file from a webserver
+  config.vbguest.no_remote = true
+end

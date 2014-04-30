@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+
+if ARGV.length < 1
+  puts "Usage: compress_for_web video.mp4 [..]"
+  return
+end
+
+# These params are kinda "iPhone specific" as the video doesn't play with
+# On iPhones the video doesn't play with "profile baseline + level 3.0"
+#
+#     -flags +loop+mv4
+#
+# These allow playing directly in a browser with preloading the whole file :
+#
+#     -movflags +faststart allow
+#
+VIDEO = {
+  mp4:  '-codec:v libx264 -preset:v slow -crf:v 20 -profile:v main -level 3.1 -movflags +faststart -flags +loop+mv4',
+  ogv:  '-codec:v libtheora -qscale:v 3 -qscale:a 3',
+  webm: '-codec:v libvpx -threads 4 -qmin 0 -qmax 50 -crf 10 -b:v 1M -quality good -cpu-used 0',
+}
+
+# As we only have voice and silences, we use pure quality-based VBR
+# The compressed audio won't have a high bitrate
+AUDIO = {
+  mp4:  '-codec:a libfdk_aac -ac 1 -ar 48000 -vbr 3',
+  ogv:  '-codec:a libvorbis  -ac 1 -ar 48000',
+  webm: '-codec:a libvorbis  -ac 1 -ar 48000',
+}
+
+for input in ARGV
+  output = input.gsub(/\.mp4\z/i, '') + '-web'
+  for format in VIDEO.keys
+    puts "Encoding #{input} in #{format.to_s.upcase} ..."
+    `ffmpeg -i #{input} #{VIDEO[format]} #{AUDIO[format]} #{output}.#{format}`
+  end
+end

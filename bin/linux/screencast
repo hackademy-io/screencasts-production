@@ -1,0 +1,76 @@
+#!/bin/bash
+
+OUTPUT=/screencasts
+PIDFILE=/tmp/screencast.pid
+OUTLOG=/tmp/screencast.out.log
+ERRLOG=/tmp/screencast.err.log
+TIMEOUT=2
+
+# Set to 'default' if you will not use an USB microphone
+# Use arecord -l to discover the right interface.
+USB_INPUT=hw:1,0
+
+extract_integer() {
+  local line=$(echo "$1" | grep "$2")
+  echo "$line" | sed "s/[^0-9]//g"
+}
+
+get_window() {
+  local  infos=$(xwininfo)
+  local height=$(extract_integer "$infos" "Height")
+  local  width=$(extract_integer "$infos" "Width")
+  local     ax=$(extract_integer "$infos" "Absolute upper-left X")
+  local     ay=$(extract_integer "$infos" "Absolute upper-left Y")
+  local     rx=$(extract_integer "$infos" "Relative upper-left X")
+  local     ry=$(extract_integer "$infos" "Relative upper-left Y")
+  local      x=$(($ax + $rx))
+  local      y=$(($ay + $ry))
+  window=("$height" "$width" "$ax" "$ay")
+}
+
+bind_shortcut() {
+  gconftool -t string -s /desktop/gnome/keybindings/custom99/name "screencast start/stop"
+  gconftool -t string -s /desktop/gnome/keybindings/custom99/action "$(readlink -f $1)"
+  gconftool -t string -s /desktop/gnome/keybindings/custom99/binding "<Primary><Alt>p"
+}
+
+if [ -e $PIDFILE ] ; then
+  pid=$(cat $PIDFILE)
+  echo "Sending term signal to $pid..."
+  kill $pid
+
+  # Double check that the program is terminated
+  echo "Wainting $TIMEOUT seconds..."
+  sleep $TIMEOUT
+
+  if ps -e | grep -qq $pid ; then
+    echo "The program is still here. Sending kill signal to $pid..."
+  else
+    echo "The program is gone."
+  fi
+
+  rm $PIDFILE
+else
+  # Rebind the shortcut to ensure that there is a way to turn the screencast off
+  bind_shortcut "$0"
+
+  # Ask for the window to record
+  get_window
+
+  # Configuration of the filename
+  filename="$OUTPUT/screencast-`date +%Y-%m-%d_%H-%M-%S`.mov"
+
+  # Configuration of the geometry
+  display=":0.0+${window[2]},${window[3]}"
+  size="${window[1]}x${window[0]}"
+
+  # Use a lossless compression to enchance capture speed no audio
+  echo "ffmpeg -f x11grab -s $size -i $display -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p $filename"
+  pid=$(ffmpeg -f x11grab -s $size -i $display -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p $filename > $OUTLOG 2> $ERRLOG & jobs -p)
+
+  # Use a lossless compression to enchance capture speed capture audio too
+  # echo "ffmpeg -f x11grab -s $size -i $display -f alsa -i $USB_INPUT -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p -c:a flac $filename"
+  # pid=$(ffmpeg -f x11grab -s $size -i $display -f alsa -i $USB_INPUT -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p -c:a flac $filename > $OUTLOG 2> $ERRLOG & jobs -p)
+
+  echo "$pid" > /tmp/screencast.pid
+fi

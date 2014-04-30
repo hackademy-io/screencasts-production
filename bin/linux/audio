@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# This script is intended to be used after the first pass
+
+OUTPUT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../screencasts"
+PIDFILE=/tmp/podcast.pid
+OUTLOG=/tmp/podcast.out.log
+ERRLOG=/tmp/podcast.err.log
+
+TIMEOUT=2
+
+# Set to 'default' if you will not use an USB microphone
+# Use arecord -l to discover the right interface.
+USB_INPUT=hw:2,0
+
+if [ -e $PIDFILE ] ; then
+  pid=$(cat $PIDFILE)
+  echo "Sending term signal to $pid..."
+  kill $pid
+
+  # Double check that the program is terminated
+  echo "Wainting $TIMEOUT seconds..."
+  sleep $TIMEOUT
+
+  if ps -e | grep -qq $pid ; then
+    echo "The program is still here. Sending kill signal to $pid..."
+  else
+    echo "The program is gone."
+  fi
+
+  rm $PIDFILE
+else
+  # Configuration of the filename
+  filename="$OUTPUT/podcast-`date +%Y-%m-%d_%H-%M-%S`.flac"
+
+  # Use a lossless compression to enchance capture speed
+  echo "ffmpeg -f alsa -i $USB_INPUT -ac 1 -c:a flac $filename"
+  pid=$(ffmpeg -f alsa -i $USB_INPUT -ac 1 -c:a flac $filename > $OUTLOG 2> $ERRLOG & jobs -p)
+  echo "$pid" > /tmp/podcast.pid
+fi

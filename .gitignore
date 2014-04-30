@@ -1,0 +1,11 @@
+*.box
+screencasts/**/*.mov
+screencasts/**/*.mp4
+screencasts/**/*.webm
+screencasts/**/*.mkv
+screencasts/**/*.ogg
+screencasts/**/*.ogv
+screencasts/**/*.flac
+screencasts/**/*.avi
+.vagrant
+
