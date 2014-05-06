@@ -1,6 +1,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+class HackyGuestAdditionsInstaller < VagrantVbguest::Installers::Ubuntu
+  def install(opts=nil, &block)
+    super
+    super_garbage_hack = <<-EOF
+if [ ! -e /usr/lib/VBoxGuestAdditions ]; then
+  sudo ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions \
+    /usr/lib/VBoxGuestAdditions || true
+fi
+EOF
+    communicate.sudo(super_garbage_hack)
+  end
+end
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -17,6 +30,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
+
+  # Use hack to patch VirtualBox 4.3.10 vboxsf bug
+  config.vbguest.installer = HackyGuestAdditionsInstaller
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "gui-precise32"
