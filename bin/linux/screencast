@@ -65,8 +65,8 @@ else
   size="${window[1]}x${window[0]}"
 
   # Use a lossless compression to enchance capture speed no audio
-  echo "ffmpeg -f x11grab -s $size -i $display -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p $filename"
-  pid=$(ffmpeg -f x11grab -s $size -i $display -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p $filename > $OUTLOG 2> $ERRLOG & jobs -p)
+  echo "ffmpeg -f x11grab -s $size -i $display -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p -r 25 $filename"
+  pid=$(ffmpeg -f x11grab -s $size -i $display -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p -r 25 $filename > $OUTLOG 2> $ERRLOG & jobs -p)
 
   # Use a lossless compression to enchance capture speed capture audio too
   # echo "ffmpeg -f x11grab -s $size -i $display -f alsa -i $USB_INPUT -c:v libx264 -preset ultrafast -qp 1 -pix_fmt yuv420p -c:a flac $filename"
