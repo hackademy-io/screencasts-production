@@ -78,6 +78,19 @@ Les instructions se trouvent dans les fichiers `doc/use-linux-guest.md` et
 
 - Si la source n'est pas en MP4 H264 ou MOV H264, effectuer un transcodage MP4/H264 10Mbps (le moins de perte possible) ratio de dimensions 1 (pas de resize) pour permettre l'édition
 
+### Prémontage abec Pitivi
+
+- créer un projet sur base 720p24 et modifier le framerate à 25 et modifier l'audio en mono 48KHz.
+- saisir le titre du screencast dans l'onglet Informations et créer le projet.
+- importer dans le biliothèque de medias les fichiers .mov et .aiff.
+- sélectionner tous les fichiers video et cliquer sur le bouton 'insérer les séquences'.
+- sélectionner tous les fichiers audio et cliquer sur le bouton 'insérer les séquences'.
+- éditer/déplacer/couper les séquences à l'aide des outils pour synchroniser l'ensemble.
+- sauvegarder le projet régulièrement, le logiciel n'est pas toujours très stable.
+- une fois terminé, cliquez sur 'effectuer le rendu' avec :
+  - format du contenu : mp4
+  - video codec : x264enc, avancé : constant quality, birate max.
+  - audio codec: AAC 48KHz
 
 ### Edition
 
