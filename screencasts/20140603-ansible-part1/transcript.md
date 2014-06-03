@@ -9,14 +9,14 @@ Dans cette première partie du screencast, nous aborderons rapidement l'installa
 
 # Installation
 
-Le gestionnaire de packets de votre système vous permet d'installer rapidement ansible.
+Le gestionnaire de paquets de votre système vous permet d'installer rapidement ansible.
 
     $ brew install ansible
     $ apt-get install ansible
 
-Mais vous pouvez opter pour l'[installation via les sources](http://docs.ansible.com/intro_installation.html#running-from-source) pour profiter de la toute dernière version. Ici nous utilisons la version 1.4.4 paquagée avec ubuntu, suffisante pour nos besoins.
+Mais vous pouvez opter pour l'[installation via les sources](http://docs.ansible.com/intro_installation.html#running-from-source) pour profiter de la toute dernière version. Ici nous utilisons la version 1.4.4 packagée avec ubuntu, suffisante pour nos besoins.
 
-Par commodité, nous utiliserons ansible avec authentification via clé SSH. Reportez vous au screencast sur les usages avancés de ssh pour sa mise en place.
+Par commodité, nous utiliserons ansible avec authentification via clé SSH. Reportez vous au screencast sur [les usages avancés de ssh](https://hackademy.io/tutoriel-videos/usage-avance-ssh) pour sa mise en place.
 
     $ cat ~/.ssh/config
     Host webserver
@@ -40,7 +40,7 @@ Ansible exige l'utilisation d'un fichier d'inventaire que nous détaillerons ens
     webserver
     dbserver
 
-Vérifions maintenant le fonctionnement de ansible en utilisant un module basique. la commande `ansible` prends en paramètre le nom de la cible définie dans le fichier d'inventaire et le nom du module invoqué, pour renvoyer une réponse au format JSON. Ici, le module `ping` renvoie une réponse "pong".
+Vérifions maintenant le fonctionnement de ansible en utilisant un module basique. la commande `ansible` prend en paramètre le nom de la cible définie dans le fichier d'inventaire et le nom du module invoqué, pour renvoyer une réponse au format JSON. Ici, le module `ping` renvoie une réponse "pong".
 
     $ ansible webserver -m ping
     webserver | success >> {
@@ -56,9 +56,9 @@ Certains modules nécessitent un ou plusieurs arguments, on les précise avec le
 
 Ici nous utilisons le paramètres `--sudo` car le module a besoin des accréditations superutilisateur pour redémarrer un service. Les paramètres du modules sont ici *name* et *state*.
 
-L'usage de la commande `ansible est habituellement réservée aux opérations rapides et que nous n'avons forcément besoin de reproduire.
+L'usage de la commande `ansible` est habituellement réservée aux opérations rapides et que nous n'avons forcément besoin de reproduire.
 
-On peut vouloir transférer un fichier pour déployer une nouvelle page avec le module copy qui prends en paramètre en source un fichier local et en destination l'emplacement sur le serveur.
+On peut vouloir transférer un fichier pour déployer une nouvelle page avec le module copy qui prend en paramètre en source un fichier local et en destination l'emplacement sur le serveur.
 
     $ ansible webserver -m copy -a "src=web/contacts.html dest=/var/www/site/contacts.html"
 
@@ -78,7 +78,7 @@ Le module `setup` est particulier, car il examine la configuration de la cible e
 
     $ ansible all -m setup --sudo
 
-Le concept appelés *facts* dans ansible est courant dans le monde des outils d'administration, nous verrons dans le prochain épisode comment en tirer parti.
+Le concept appelé *facts* dans ansible est courant dans le monde des outils d'administration, nous verrons dans le prochain épisode comment en tirer parti.
 
 Vous avez compris le principe des modules de ansible, pour consulter la longue liste de modules disponibles, allez sur la [documentation officielle](http://docs.ansible.com/modules_by_category.html).
 
@@ -164,9 +164,9 @@ Rappel de la syntaxe de la commande ansible :
 
     $ ansible france:\!paris:\!web-10 -i ansible_geo -m file -a "dest=/var/www/contacts.html state=absent"
 
-On commence à esquisser l'intérêt d'un tel outil pour effectuer des opératation sur tout ou parite d'une architecture.
+On commence à esquisser l'intérêt d'un tel outil pour effectuer des opérations sur tout ou partie d'une architecture.
 
-Il y a de nombreux format de *pattern* permettant l'intersection, l'exclusion, ou l'utilisation d'expressions rationnelles. [Consultez la documentation](http://docs.ansible.com/intro_patterns.html) pour plus de détails.
+Il y a de nombreux formats de *pattern* permettant l'intersection, l'exclusion, ou l'utilisation d'expressions rationnelles. [Consultez la documentation](http://docs.ansible.com/intro_patterns.html) pour plus de détails.
 
 # Conclusion
 
