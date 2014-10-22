@@ -1,6 +1,6 @@
 # Orchestration d'une tâche complète avec Ansible
 
-Dans le screencast précédent, nous avions exploré les bases de ansible pour nous familiariser avec les modules et l'inventaire. Aujourd'hui nous allons mettre à profit ces concepts pour automatiser une tâche d'administration plus complexe, de bout en bout.
+Dans le screencast précédent, nous avions exploré les bases de ansible pour nous familiariser avec les modules et l'inventaire. Aujourd'hui nous allons mettre à profit ces concepts pour automatiser une tâche d'administration plus complexe, de bout en bout à l'aide de playbooks.
 
 ## There's a playbook for that!
 
@@ -50,7 +50,7 @@ Le playbook une fois construit s'exécute avec la commande `ansible-playbook`.
 
 La sortie de la commande indique le résultat des tâches que nous avons définies par la directive `name` en jaune si le module a effectué une modification ou sinon en vert si rien n'a changé et éventuellement en rouge si une erreur s'est produite (par défaut le playbook s'arrête à ce moment là).
 
-Un playbook peut également s'appliquer sur plusieurs cibles, à l'instar de la commande ansible. Dans ce cas les différentes tâches sont effectuées à la suite des unes des autres séquentiellement sur chaque cible.
+Un playbook peut également s'appliquer sur plusieurs cibles, à l'instar de la commande `ansible`. Dans ce cas les différentes tâches sont effectuées à la suite des unes des autres séquentiellement sur chaque cible.
 
     $ cat push_to_webservers.yml
     ---
@@ -277,8 +277,6 @@ Comme pour la commande `ansible`, il est bien entenu nécessaire que les accréd
     webserver                  : ok=14    changed=12   unreachable=0    failed=0
 
 Notre application est correctement installée comme le signale la dernière tâche qui effectue un test de contenu sur l'url publique de l'application. On peut bien entendu vérifier manuellement.
-
-![Copie d'écran du navigateur]()
 
 ## Conclusion
 
