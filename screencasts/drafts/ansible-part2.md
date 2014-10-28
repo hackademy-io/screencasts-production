@@ -1,6 +1,6 @@
 # Orchestration d'une tâche complète avec Ansible
 
-Dans le screencast précédent, nous avions exploré les bases de ansible pour nous familiariser avec les modules et l'inventaire. Aujourd'hui nous allons mettre à profit ces concepts pour automatiser une tâche d'administration plus complexe, de bout en bout à l'aide de playbooks.
+Dans le [screencast précédent](https://hackademy.io/tutoriel-videos/ansible-automatiser-gestion-serveur-partie-1), nous avions exploré les bases de ansible pour nous familiariser avec les modules et l'inventaire. Aujourd'hui nous allons mettre à profit ces concepts pour automatiser une tâche d'administration plus complexe, de bout en bout à l'aide de playbooks.
 
 ## There's a playbook for that!
 
@@ -25,7 +25,7 @@ Un playbook est un fichier au format YML, qui peut aussi bien servir une seule f
           sudo: yes
           sudo_user: "{{ app_user }}"
 
-Dans ce fichier, on y retrouve une cible de base avec la directive `hosts`, puis des variables qu'on utilisera tout au long du playbook, en plus de celle fournies par le module *setup*, vu dans le screencast précédent, qui est appelé automatiquement pour peupler la liste des variables disponibles.
+Dans ce fichier, on y retrouve une cible de base avec la directive `hosts`, puis des variables qu'on utilisera tout au long du playbook, en plus de celles fournies par le module *setup*, vu dans le screencast précédent, qui est appelé automatiquement pour peupler la liste des variables disponibles.
 
 Viennent ensuite les tâches proprement dites. On les préfixe par la directive `name`. Bien qu'optionnelle, elle permet d'avoir une trace lisible de ce qui se déroule à l'exécution du playbook.
 
@@ -50,7 +50,7 @@ Le playbook une fois construit s'exécute avec la commande `ansible-playbook`.
 
 La sortie de la commande indique le résultat des tâches que nous avons définies par la directive `name` en jaune si le module a effectué une modification ou sinon en vert si rien n'a changé et éventuellement en rouge si une erreur s'est produite (par défaut le playbook s'arrête à ce moment là).
 
-Un playbook peut également s'appliquer sur plusieurs cibles, à l'instar de la commande `ansible`. Dans ce cas les différentes tâches sont effectuées à la suite des unes des autres séquentiellement sur chaque cible.
+Un playbook peut également s'appliquer sur plusieurs cibles, à l'instar de la commande `ansible`. Dans ce cas les différentes tâches sont effectuées à la suite les unes des autres séquentiellement sur chaque cible.
 
     $ cat push_to_webservers.yml
     ---
@@ -76,7 +76,7 @@ Un playbook peut également s'appliquer sur plusieurs cibles, à l'instar de la 
 
 Dans ce playbook, les 2 tâches spécifiées s'assurent que l'application dans le répertoire webapp est bien synchronisée avec celle sur les serveurs web, et que le fichier de configuration de nginx spécifié est à jour. Puis, la tâche `Recharger nginx` doit être notifiée du changement éventuel. Cette tâche spéciale est définie dans la section `handlers` et exécutée uniquement si le statut de la tâche appelante est *changed*. C'est très pratique pour recharger au besoin les services dont la configuration a été modifiée.
 
-L'exécution du playbook se déroule séquentiellement par serveur et par tâche et pas forcément dans l'ordre puisque ces actions sont lancée paralèllement sur l'ensemble des cibles (5 par défaut).
+L'exécution du playbook se déroule séquentiellement par serveur et par tâche et pas forcément dans l'ordre puisque ces actions sont lancée parallèlement sur l'ensemble des cibles (5 par défaut).
 
     $ ansible-playbook push_to_webservers.yml -i webservers_inventory
 
@@ -139,7 +139,7 @@ L'intérêt des commandes et des playbooks ansible, est qu'ils ont un fonctionne
 
 ## Définition d'un _Use Case_ concret
 
-Afin de démontrer les possibilités d'orchestration plus avancées, allons un peu plus loin dans le déroulement du déploiement d'une application. En PHP, Ruby ou Java, le seul dépôt du logiciel sur le serveur n'est pas toujours suffisant, et on se retrouve à configurer un ensemble de choses à la suite des unes des autres. Il existe bien évidemment d'autres outils probablement plus adaptés pour cela, mais l'idée est de présenter un _use case_ classique et connu, à l'aide d'un playbook ansible.
+Afin de démontrer les possibilités d'orchestration plus avancées, allons un peu plus loin dans le déroulement du déploiement d'une application. En PHP, Ruby ou Java, le seul dépôt du logiciel sur le serveur n'est pas toujours suffisant, et on se retrouve à configurer un ensemble de choses à la suite les unes des autres. Il existe bien évidemment d'autres outils probablement plus adaptés pour cela, mais l'idée est de présenter un _use case_ classique et connu, à l'aide d'un playbook ansible.
 
 Prenons l'exemple de l'installation de l'application web [Wallabag](http://wallabag.org). Celle-ci doit être :
 
@@ -224,7 +224,7 @@ Pour exécuter ce playbook, j'appelle tout simplement la commande :
 
     $ ansible-playbook deploy_app.yml -i production
 
-Comme pour la commande `ansible`, il est bien entenu nécessaire que les accréditations SSH soient correctement positionnées sur les machines ciblées dans ce playbook.
+Comme pour la commande `ansible`, il est bien entendu nécessaire que les accréditations SSH soient correctement positionnées sur les machines ciblées dans ce playbook.
 
     PLAY [webserver] **************************************************************
 
@@ -280,6 +280,6 @@ Notre application est correctement installée comme le signale la dernière tâc
 
 ## Conclusion
 
-Nous avons donc vu que les playbooks sont des suites de tâches telles que nous les avions vues dans le screencast précédent avec la commande `ansible`. Ils sont toutefois plus flexibles et paramétrables à l'aide des structures de contrôles et des variables que l'on peut utiliser.
+Nous avons donc vu que les playbooks sont des suites de tâches telles que nous les avions vues dans le [screencast précédent](https://hackademy.io/tutoriel-videos/ansible-automatiser-gestion-serveur-partie-1) avec la commande `ansible`. Ils sont toutefois plus flexibles et paramétrables à l'aide des structures de contrôles et des variables que l'on peut utiliser.
 
 Il existe un niveau d'abstraction encore supérieur que sont les **rôles**. Ils permettent d'être plus générique et ainsi de concevoir une abstraction plus globale au niveau d'une infrastructure. C'est ce que nous aborderons dans la dernière partie de cette série.
