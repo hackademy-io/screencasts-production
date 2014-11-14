@@ -35,7 +35,7 @@ Ansible fournit [un hub](https://galaxy.ansible.com) qui centralise les rôles c
     ./vars:
     main.yml
 
-Les dossiers créés sont assez équivoques, le dossier `meta` sert à spécifier des metadonnées lorsque l'on publie un rôle sur le hub. Autrement, on y retrouve la base du playbook dans les dossiers `tasks/main.yml` et `handlers/main.yml`, la gestion des variables dans les dossiers `vars` et `defaults`, ainsi que les fichiers et templates dans les répertoires correspondants. Les différentes composantes d'un rôle étant dans des dossiers, il est possible de séparer logiquement les différents élements, de faire des *includes*, et de référencer directement des fichiers et des templates de manière relatives aux rôles, sans préciser leur chemin complet.
+Les dossiers créés sont assez équivoques, le dossier `meta` sert à spécifier des metadonnées lorsque l'on publie un rôle sur le hub. Autrement, on y retrouve la base du playbook dans les dossiers `tasks/main.yml` et `handlers/main.yml`, la gestion des variables dans les dossiers `vars` et `defaults`, ainsi que les fichiers et templates dans les répertoires correspondants. Les différentes composantes d'un rôle étant dans des dossiers, il est possible de séparer logiquement les différents éléments, de faire des *includes*, et de référencer directement des fichiers et des templates de manière relatives aux rôles, sans préciser leur chemin complet.
 
 Un rôle s'utilise dans un playbook général, dans lequel on se contente de préciser le rôle que l'on souhaite affecter à la cible du playbook.
 
@@ -46,13 +46,13 @@ Un rôle s'utilise dans un playbook général, dans lequel on se contente de pr�
 
 ## Construction et utilisation de rôles
 
-Dans une approche meta, la mise en place de la structure de serveurs des précedents parties a été effectuée en partie avec Ansible. Je vous propose d'étudier la démarche pour illustrer un cas concret.
+Dans une approche meta, la mise en place de la structure de serveurs des précédentes parties a été effectuée en partie avec Ansible. Je vous propose d'étudier la démarche pour illustrer un cas concret.
 
 L'objectif était d'avoir à disposition un trio de serveurs correctement configurés pour fournir une architecture *3-tier* reverseproxy-webserver-dbserver et y déployer un application web PHP/mySQL.
 
 N'ayant pas ces serveurs à disposition, je me suis appuyé sur un fournisseur de VPS dans le cloud, qui dispose d'une API supportée par Ansible. Ce qui m'a amené à écrire un playbook dédié, qui fera l'objet d'un screencast bonus.
 
-Ces serveurs étant à disposition, je souhaitais définir un role par type de serveur, ainsi qu'un rôle commun permettant d'uniformiser la configuration. J'ai donc créé un playbook général, mettant en scene les différents rôles affectés aux serveurs.
+Ces serveurs étant à disposition, je souhaitais définir un rôle par type de serveur, ainsi qu'un rôle commun permettant d'uniformiser la configuration. J'ai donc créé un playbook général, mettant en scène les différents rôles affectés aux serveurs.
 
     $ cat getitrunning.yml
     ---
@@ -78,7 +78,7 @@ Ces serveurs étant à disposition, je souhaitais définir un role par type de s
 
 Reste à alimenter comme il se doit les rôles utilisés.
 
-Le role `common` n'est en fait qu'un simple playbook transféré en rôle, seul le fichier `tasks/main.yml` étant spécifié.
+Le rôle `common` n'est en fait qu'un simple playbook transféré en rôle, seul le fichier `tasks/main.yml` étant spécifié.
 
     $ cat roles/common/tasks/main.yml
     ---
@@ -185,7 +185,7 @@ Le playbook initial s'exécute de la sorte.
 
     <<insert result here>>
 
-Les tâches s'exécutent d'aboird parallèment sur les 3 serveurs pour implémenter le rôle `common`, puis séquentiellement pour chaque rôles associés dans le playbook.
+Les tâches s'exécutent d'abord parallèlement sur les 3 serveurs pour implémenter le rôle `common`, puis séquentiellement pour chaque rôle associé dans le playbook.
 
 ## Conclusion
 
