@@ -33,7 +33,7 @@ J'utilise pour cela `curl` en ligne de commande, ainsi qu'un [parser Json](http:
 
 J'aurais également besoin de ma clé API et de mon identifiant client, toutefois ces informations étant personnelles, je ne souhaite pas les laisser en clair dans un fichier texte.
 
-Heureusement ansible propose la fonctionalité `vault` permettant de chiffer et de protéger un fichier avec un mot de passe.
+Heureusement ansible propose la fonctionnalitéé `vault` permettant de chiffrer et de protéger un fichier avec un mot de passe.
 
     $ ansible-vault create do_personnal_vars.yml
     Vault password: **********
@@ -70,7 +70,7 @@ Nous voici prêt a écrire le playbook qui créera les serveurs sur le cloud Dig
 
 J'utilise ici une variable `servers` qui me permet de n'écrire une seule tâche et d'utiliser une boucle ansible avec `with_items`.
 
-Reste à lancer ce playbook. Comme nous avons un fichier yml chiffré, il faut préciser la directive `--ask-vault-pass`. Pas besoin de préciser de ficheir d'inventaire car le playbook s'exécute en local. Rappelez vous la dépendance avec le module python `dopy` que nous installons juste avant.
+Reste à lancer ce playbook. Comme nous avons un fichier yml chiffré, il faut préciser la directive `--ask-vault-pass`. Pas besoin de préciser de fichier d'inventaire car le playbook s'exécute en local. Rappelez vous la dépendance avec le module python `dopy` que nous installons juste avant.
 
     $ pip install dopy
     Downloading/unpacking dopy
@@ -189,6 +189,6 @@ Enfin, et pour ne pas perdre trop de crédits sur DO, j'ai également créé un 
 
 ## Conclusion
 
-C'est pour cet épisode bonus. Il exite bien d'autre modules ansible pour un tas d'environnement du net. N'hésitez pas à en expérimenter quelques uns, vous trouverez surement un intérêt dans vos workflow quotidiens.
+C'est tout pour cet épisode bonus. Il existe bien d'autre modules ansible pour un tas d'environnement du net. N'hésitez pas à en expérimenter quelques uns, vous trouverez sûrement un intérêt dans vos workflow quotidiens.
 
 Merci d'avoir suivi entièrement cette série, et à la prochaine fois sur un autre sujet.
